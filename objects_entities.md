@@ -17,3 +17,5 @@ The initial properties of an entity are stored in the 'initial\_properties' fiel
 Next lua entity is activated by calling its on_activate.
 
 In the end lua entity, being a static object (i.e. an object that persists when its containing MapBlock is unloaded and must be reloaded on block reload), is added to its MapBlock's list of static objects and stores the block's position.
+
+Summing up, lua entity consists of 2 parts: pure lua object and ObjectRef. The former is made from the prototype registered earlier w/ core.register_entity. The prototype serves as metatable after creation. The former contains a reference to the latter in the 'object' field. The latter is the main api to an object via ObjectRef methods in `src/script/lua_api/l_object.cpp`. The reference to the lua entity from ObjectRef is available via get_luaentity() call.
