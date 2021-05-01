@@ -18,4 +18,13 @@ The inventory is represented by InvRef object in lua and is created by InvRef::c
 
 **TODO** Is this done to not keep refs to InventoryObjects around in lua, but to get them when needed (i.e. InvRef::l_add_item) and keep only for the duration of the operation?
 
-Inventory object doesn't deal w/ ItemStack objects directly. Instead it stores InventoryLists (such as "main" list), which in turn store ItemStacks.
+Inventory object doesn't deal w/ ItemStack objects directly. Instead it stores InventoryLists, which in turn store ItemStacks. There are 4 lists:
+
+* "main" stores the inventory of the game.
+* "craft" stores the items on the crafting grid.
+* "craftpreview" is a one-item list that stores the preview result of crafting.
+* "craftresult" is a one-item hidden list for internal usage by engine...
+
+**TODO** find out and describe how craftresult list is used
+
+List contents can be returned w/ `<inventory_obj>:get_list(<list_name>)` for a specific list or `<inventory_obj>:get_lists()` to retrieve all lists. List contents can be set w/ `set_list()` and `set_lists()` functions. See InvRef API.
