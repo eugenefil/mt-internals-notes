@@ -1,4 +1,12 @@
-The base class for active server objects (players, entities) is ServerActiveObject (src/server/serveractiveobject.cpp).
+Players are implemented by PlayerSAO class (`src/server/player_sao.cpp`), entities by LuaEntitySAO class (`src/server/luaentity_sao.cpp`). Both types of objects are server active objects (SAOs) and inherit from ServerActiveObject class (src/server/serveractiveobject.cpp), though they don't inherit directly but through a UnitSAO class (`src/server/unit_sao.cpp`).
+
+## Changing player's HP
+
+HP is changed by setting its absolute value w/ `<player_obj>:set_hp()` lua object api (`src/script/lua_api/l_object.cpp`), which in turn calls PlayerSAO::setHP(). Through `ScriptApiPlayer::on_player_hpchange()` c++ api call (`src/script/cpp_api/s_player.cpp`) setHP() runs callbacks in `core.registered_on_player_hpchanges` (builtin/game/register.lua). Those callbacks are designated to run on player HP change, registered by `core.register_on_player_hpchange()` and are divided into 2 groups: modifiers and loggers. Modifiers each processes HP change value in turn and can modify this value and optionally cancel the processing of the chain. Loggers only process the final HP change value that resulted from processing modifiers.
+
+If the player is immortal (see UnitSAO::isImmortal()), defined by having an "immortal" armor group, it's HP cannot go down.
+
+A player (or object, generally) is dead if its HP == 0, so setHP(0) kills a player (if he can be killed).
 
 ## Creating an entity
 
